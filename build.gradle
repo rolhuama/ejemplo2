@@ -1,0 +1,78 @@
+// esta sección esta pensada para el proceso de construcción.
+buildscript {
+	// ext: sirve extender las variables de Gradle.
+	ext {
+		springBootVersion = '1.4.0.RELEASE'
+	}
+	// repositorios solo estan disponibles para el Gradle internamente
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		//alcance o scope
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")		
+	}
+}
+
+apply plugin: 'java'
+apply plugin: 'groovy'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'spring-boot'
+apply plugin: 'checkstyle'
+//apply plugin: 'findbugs'
+apply plugin: "jacoco"
+
+
+jar {
+	baseName = 'dia3'
+	version = '0.0.1-SNAPSHOT'
+}
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
+// Mi aplicación usará estos repositorios para buscar sus dependencias
+repositories {
+	mavenCentral()
+}
+
+// son aplicativas.
+dependencies {
+	// coordenadas de Maven
+	// groupId:artefactId:version
+
+	// El plugin de Spring Boot para Gradle, en ejecución (proceso de build),
+	// va a introducir la versión adecuada de las dependencias.
+	// Trabajo hecho por "apply plugin: 'spring-boot'"
+	compile('org.springframework.boot:spring-boot-starter-web')
+	//
+	compile('org.springframework.boot:spring-boot-starter-hateoas')
+	testCompile('org.springframework.boot:spring-boot-starter-test')
+
+	testCompile 'org.codehaus.groovy:groovy-all:2.4.8'
+	testCompile 'org.spockframework:spock-core:1.1-groovy-2.4-rc-4'
+}
+
+eclipse {
+	classpath {
+		 containers.remove('org.eclipse.jdt.launching.JRE_CONTAINER')
+		 containers 'org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7'
+	}
+}
+
+
+
+/*tasks.withType(FindBugs) {
+    reports {
+        xml.enabled false
+        html.enabled true
+        
+    }
+}*/
+
+jacoco {
+    toolVersion = "0.7.6.201602180812"
+}
+
+
+check.dependsOn jacocoTestReport
